@@ -42,7 +42,7 @@ function CanvasApp() {
 		toast({
 			position: 'top',
 			title: 'Paint created at:',
-			description: "srikartalluri.github.io/paintbin" + prom.id,
+			description: "srikartalluri.github.io/paintbin/#/" + prom.id,
 			status: 'success',
 			duration: 10000,
 			isClosable: true,
