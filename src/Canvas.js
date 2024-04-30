@@ -1,9 +1,9 @@
 import CanvasDraw from "react-canvas-draw";
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, {useState} from "react";
 import Menubar from "./Menubar";
 import db from "./utils/firebase";
-import { doc, getDoc, addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { BrowserRouter as Router, Routes, Route, Link , useNavigate, useParams} from 'react-router-dom';
+import { doc, setDoc, getDoc, addDoc, collection, serverTimestamp } from "firebase/firestore";
+import {useParams} from 'react-router-dom';
 import NotFound from "./NotFound";
 
 
@@ -19,15 +19,17 @@ import {
 } from "@chakra-ui/react";
 
 function CanvasApp() {
-    const [color, setColor] = React.useState(30);
-    const [showGrid, setShowGrid] = React.useState(true);
-    const [thickness, setThickness] = React.useState(2);
 
+	// boolean to see if we loaded in a valid url
+	const [validId, setValidId] = useState(false);
+
+	// ref for the current canvas
     const [canvas, setCanvas] = useState(null);
-    const [sliderValue, setSliderValue] = React.useState(30);
-	const [canvasID, setCanvasID] = React.useState(null);
+
+	// toast is a function that handles notifications
 	const toast = useToast();
 
+	// stores current canvas data to db and toasts the link
 	const saveCanvasToDb = async (inputCanvas) => {
 		const collectionRef = collection(db, "paints");
 		const payload = {
@@ -36,7 +38,6 @@ function CanvasApp() {
 			
 		};
 		const prom = await addDoc(collectionRef, payload);
-
 		console.log(prom.id);
 		
 		toast({
@@ -50,10 +51,38 @@ function CanvasApp() {
 		
 	};
 
-	const { id } = useParams();
-	const navigate = useNavigate();
+	const editCanvasToDb = async (inputCanvas) => {
+		const collectionRef = collection(db, "paints");
+		const payload = {
+			data: inputCanvas,
+			id: serverTimestamp()
+			
+		};
 
-	  const initCanvas = (canvasReff) => {
+		const docRef = doc(db, "paints", id);
+
+		console.log(docRef);
+		console.log(payload);
+		await setDoc(docRef, payload);
+		
+		toast({
+			position: 'top',
+			title: 'Paint updated at:',
+			description: "srikartalluri.github.io/paintbin/#/" + id,
+			status: 'success',
+			duration: 10000,
+			isClosable: true,
+		})
+		
+	};
+
+	// id is the url of the current drawing. null if on homepage
+	const { id } = useParams();
+
+	// function to run once on init.
+	// sets canvas hook to input ref
+	// if we have a valid id url, then we load that info into canvas
+	const initCanvas = (canvasReff) => {
 		setCanvas(canvasReff);
 		const userData = async () => {
 			if(id == null){
@@ -62,23 +91,36 @@ function CanvasApp() {
 
 			const docRef = doc(db, "paints", id);
 			const docSnap = await getDoc(docRef);
-	  
+
 			if (docSnap.exists() && canvas != null) {
-			  console.log(docSnap.data()['data']);
-			  canvas.loadSaveData(docSnap.data()['data'])
-  
+				console.log(docSnap.data()['data']);
+				canvas.loadSaveData(docSnap.data()['data'])
+				setValidId(true);	
+
 			} else {
 				console.log(id + " not found!");
-
-			  
+				
+				
 
 			}
-		  };
+			};
 		userData();
-		
-	  }
-
 	
+	}
+
+	const editButton = () => {
+		if(!validId){
+			return
+		}
+		return (
+			<Button onClick={() => {
+
+				editCanvasToDb(canvas.getSaveData())
+
+			}}>Edit</Button>
+		)
+
+	}
 
     return (
         <div className="App">
@@ -92,45 +134,13 @@ function CanvasApp() {
 
             <div className="bottom-middle-div">
                 <ChakraProvider>
-{/* 
-					<div className = "sliderParent">
-						<Slider
-							aria-label="slider-ex-1"
-							defaultValue={sliderValue}
-							opacity={0.01 * sliderValue}
-							onChange={(v) => setSliderValue(v)}
-						>
-							<SliderTrack>
-								<SliderFilledTrack />
-							</SliderTrack>
-							<SliderThumb />
-						</Slider>
-
-					</div> */}
-
                     
-                    <Button onClick={() => {
-							localStorage.setItem(
-								"savedDrawing",
-								canvas.getSaveData()
-							  );
+                    <Button onClick={() => {saveCanvasToDb(canvas.getSaveData())}}
+						colorScheme='green'>
+						Save
+					</Button>
+					{editButton()}
 
-							  
-							saveCanvasToDb(canvas.getSaveData());
-
-						}}
-						colorScheme='green'
-
-					
-					
-					>Save</Button>
-					{/* <Button onClick={() => {
-							
-							canvas.loadSaveData(localStorage.getItem("savedDrawing"));
-							console.log(localStorage.getItem("savedDrawing"))
-					}}	 
-					
-					/> */}
                 </ChakraProvider>
             </div>
         </div>

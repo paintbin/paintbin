@@ -1,8 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import CanvasApp from './Canvas';
-import { ChakraProvider } from '@chakra-ui/react'
-import { BrowserRouter as Router, Routes, Route, Link, HashRouter } from 'react-router-dom';
+import {Routes, Route, HashRouter } from 'react-router-dom';
 
 function App() {
   return (

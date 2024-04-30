@@ -1,4 +1,26 @@
-# Getting Started with Create React App
+# Welcome to PaintBin
+
+## About
+Introducing PaintBin, the best way to share sketches!
+
+
+## Tech Stack
+- React
+- React-toastify
+- React-Canvas-Draw
+- Chakra UI
+- Firebase Auth
+- Firestore
+
+## Functionalities
+- Draw on canvas with varying color and line thickness
+- Undo, Redo, Zoom, Pan on Canvas
+- Save a drawing to a shareable link
+- Any friend that recieves the link can "edit" the drawing so be careful who you send it to
+- Sign In to view your past created sketches
+
+
+
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
