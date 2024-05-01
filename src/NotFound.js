@@ -1,5 +1,5 @@
 import CanvasDraw from "react-canvas-draw";
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React from "react";
 
 
 function NotFound() {

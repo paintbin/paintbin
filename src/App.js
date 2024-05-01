@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import CanvasApp from './Canvas';
 import {Routes, Route, HashRouter } from 'react-router-dom';
+import { Resizable } from 'react-resizable';
 
 function App() {
   return (

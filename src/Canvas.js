@@ -5,7 +5,7 @@ import db from "./utils/firebase";
 import { doc, setDoc, getDoc, addDoc, collection, serverTimestamp } from "firebase/firestore";
 import {useParams} from 'react-router-dom';
 import NotFound from "./NotFound";
-
+import { Resizable } from 'react-resizable';
 
 import {
     Slider,
@@ -19,6 +19,9 @@ import {
 } from "@chakra-ui/react";
 
 function CanvasApp() {
+	const [width, setWidth] = React.useState(window.innerWidth);
+  	const [height, setHeight] = React.useState(window.innerHeight);
+
 
 	// boolean to see if we loaded in a valid url
 	const [validId, setValidId] = useState(false);
@@ -51,6 +54,7 @@ function CanvasApp() {
 		
 	};
 
+	//edit functionality
 	const editCanvasToDb = async (inputCanvas) => {
 		const collectionRef = collection(db, "paints");
 		const payload = {
@@ -108,8 +112,9 @@ function CanvasApp() {
 	
 	}
 
+	// renders an edit button if we have a valid id
 	const editButton = () => {
-		if(!validId){
+		if(id == null){
 			return
 		}
 		return (
@@ -121,29 +126,42 @@ function CanvasApp() {
 		)
 
 	}
-
+	console.log(width, height);
     return (
-        <div className="App">
-            <CanvasDraw
-                ref={canvasRef => initCanvas(canvasRef)}
-                enablePanAndZoom={true}
-                canvasHeight={window.innerHeight}
-                canvasWidth={window.innerWidth}
-                mouseZoomFactor={-0.01}
-            />
+		<Resizable
+			width={width}
+			height={height}
+			onResize={(event, {element, size}) =>{
+				setWidth(size.width);
+        		setHeight(size.height);
+				console.log(size.width, size.height)
+			}}
+		
+		
+		>
+			<div className="App">
+				<CanvasDraw
+					ref={canvasRef => initCanvas(canvasRef)}
+					enablePanAndZoom={true}
+					canvasHeight={height}
+					canvasWidth={width}
+					mouseZoomFactor={-0.01}
+				/>
 
-            <div className="bottom-middle-div">
-                <ChakraProvider>
-                    
-                    <Button onClick={() => {saveCanvasToDb(canvas.getSaveData())}}
-						colorScheme='green'>
-						Save
-					</Button>
-					{editButton()}
+				<div className="bottom-middle-div">
+					<ChakraProvider>
+						
+						<Button onClick={() => {saveCanvasToDb(canvas.getSaveData())}}
+							colorScheme='green'>
+							Save
+						</Button>
+						{editButton()}
 
-                </ChakraProvider>
-            </div>
-        </div>
+					</ChakraProvider>
+				</div>
+			</div>
+		</Resizable>
+			
     );
 }
 
