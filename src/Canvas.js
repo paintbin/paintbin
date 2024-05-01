@@ -22,10 +22,6 @@ function CanvasApp() {
 	const [width, setWidth] = React.useState(window.innerWidth);
   	const [height, setHeight] = React.useState(window.innerHeight);
 
-
-	// boolean to see if we loaded in a valid url
-	const [validId, setValidId] = useState(false);
-
 	// ref for the current canvas
     const [canvas, setCanvas] = useState(null);
 
@@ -56,7 +52,6 @@ function CanvasApp() {
 
 	//edit functionality
 	const editCanvasToDb = async (inputCanvas) => {
-		const collectionRef = collection(db, "paints");
 		const payload = {
 			data: inputCanvas,
 			id: serverTimestamp()
@@ -64,9 +59,6 @@ function CanvasApp() {
 		};
 
 		const docRef = doc(db, "paints", id);
-
-		console.log(docRef);
-		console.log(payload);
 		await setDoc(docRef, payload);
 		
 		toast({
@@ -79,6 +71,14 @@ function CanvasApp() {
 		})
 		
 	};
+
+	// dynamic resizing
+	const updateSize = () => {
+		setWidth(window.innerWidth);
+		setHeight(window.innerHeight);
+	};
+	window.addEventListener('resize', updateSize);
+
 
 	// id is the url of the current drawing. null if on homepage
 	const { id } = useParams();
@@ -97,15 +97,10 @@ function CanvasApp() {
 			const docSnap = await getDoc(docRef);
 
 			if (docSnap.exists() && canvas != null) {
-				console.log(docSnap.data()['data']);
 				canvas.loadSaveData(docSnap.data()['data'])
-				setValidId(true);	
 
 			} else {
 				console.log(id + " not found!");
-				
-				
-
 			}
 			};
 		userData();
@@ -126,19 +121,7 @@ function CanvasApp() {
 		)
 
 	}
-	console.log(width, height);
     return (
-		<Resizable
-			width={width}
-			height={height}
-			onResize={(event, {element, size}) =>{
-				setWidth(size.width);
-        		setHeight(size.height);
-				console.log(size.width, size.height)
-			}}
-		
-		
-		>
 			<div className="App">
 				<CanvasDraw
 					ref={canvasRef => initCanvas(canvasRef)}
@@ -160,7 +143,6 @@ function CanvasApp() {
 					</ChakraProvider>
 				</div>
 			</div>
-		</Resizable>
 			
     );
 }
