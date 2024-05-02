@@ -5,6 +5,8 @@ import { doc, setDoc, getDoc, addDoc, collection, serverTimestamp } from "fireba
 import {useParams} from 'react-router-dom';
 import { useDisclosure } from '@chakra-ui/react'
 import {InfoOutlineIcon} from '@chakra-ui/icons'
+import ShortUniqueId from 'short-unique-id';
+
 
 import {
     ChakraProvider,
@@ -22,7 +24,7 @@ import {
 	ModalCloseButton,
   } from '@chakra-ui/react'
 
-
+const uidLen = 8;
 
 function CanvasApp() {
 	const [width, setWidth] = React.useState(window.innerWidth);
@@ -39,21 +41,26 @@ function CanvasApp() {
 	// vars that handle the modal (the shit that pops up when u click the info button)
 	const { isOpen, onOpen, onClose } = useDisclosure()
 
+	// id generator
+	const uid = new ShortUniqueId();
+
+
 	// stores current canvas data to db and toasts the link
 	const saveCanvasToDb = async (inputCanvas: string) => {
-		const collectionRef = collection(db, "paints");
+		const idInput = uid.rnd(uidLen)
+		const docRef = doc(db, "paints", idInput)
+
 		const payload = {
 			data: JSON.parse(inputCanvas),
 			id: serverTimestamp()
 			
 		};
-		const prom = await addDoc(collectionRef, payload);
-		console.log(prom.id);
+		const prom = await setDoc(docRef, payload);
 		
 		toast({
 			position: 'top',
 			title: 'Paint created at:',
-			description: rootURL + "/#/" + prom.id,
+			description: rootURL + "/#/" + idInput, //prom.id,
 			status: 'success',
 			duration: 10000,
 			isClosable: true,
