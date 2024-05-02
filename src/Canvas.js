@@ -5,7 +5,6 @@ import db from "./utils/firebase";
 import { doc, setDoc, getDoc, addDoc, collection, serverTimestamp } from "firebase/firestore";
 import {useParams} from 'react-router-dom';
 import NotFound from "./NotFound";
-import { Resizable } from 'react-resizable';
 
 import {
     Slider,
