@@ -1,19 +1,12 @@
 import CanvasDraw from "react-canvas-draw";
 import React, {useState} from "react";
-import Menubar from "./Menubar";
 import db from "./utils/firebase";
 import { doc, setDoc, getDoc, addDoc, collection, serverTimestamp } from "firebase/firestore";
 import {useParams} from 'react-router-dom';
-import NotFound from "./NotFound";
 import { useDisclosure } from '@chakra-ui/react'
 import {InfoOutlineIcon} from '@chakra-ui/icons'
 
 import {
-    Slider,
-    SliderTrack,
-    SliderFilledTrack,
-    SliderThumb,
-    SliderMark,
     ChakraProvider,
     Button,
 	useToast,
