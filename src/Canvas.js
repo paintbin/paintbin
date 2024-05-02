@@ -5,6 +5,8 @@ import db from "./utils/firebase";
 import { doc, setDoc, getDoc, addDoc, collection, serverTimestamp } from "firebase/firestore";
 import {useParams} from 'react-router-dom';
 import NotFound from "./NotFound";
+import { useDisclosure } from '@chakra-ui/react'
+import {InfoOutlineIcon} from '@chakra-ui/icons'
 
 import {
     Slider,
@@ -14,8 +16,18 @@ import {
     SliderMark,
     ChakraProvider,
     Button,
-	useToast 
+	useToast,
+	IconButton 
 } from "@chakra-ui/react";
+import {
+	Modal,
+	ModalOverlay,
+	ModalContent,
+	ModalHeader,
+	ModalFooter,
+	ModalBody,
+	ModalCloseButton,
+  } from '@chakra-ui/react'
 
 function CanvasApp() {
 	const [width, setWidth] = React.useState(window.innerWidth);
@@ -26,6 +38,9 @@ function CanvasApp() {
 
 	// toast is a function that handles notifications
 	const toast = useToast();
+
+	// vars that handle the modal (the shit that pops up when u click the info button)
+	const { isOpen, onOpen, onClose } = useDisclosure()
 
 	// stores current canvas data to db and toasts the link
 	const saveCanvasToDb = async (inputCanvas) => {
@@ -112,11 +127,10 @@ function CanvasApp() {
 			return
 		}
 		return (
-			<Button onClick={() => {
-
-				editCanvasToDb(canvas.getSaveData())
-
-			}}>Edit</Button>
+			<Button onClick={() => {editCanvasToDb(canvas.getSaveData())}}
+				size = 'lg'>
+				Edit
+			</Button>
 		)
 
 	}
@@ -129,18 +143,45 @@ function CanvasApp() {
 					canvasWidth={width}
 					mouseZoomFactor={-0.01}
 				/>
+				<ChakraProvider>
+					<div className = "top-right-div">
+						<IconButton aria-label='Info Button' 
+									icon={<InfoOutlineIcon />} 
+									onClick={onOpen}/>
+					</div>
 
-				<div className="bottom-middle-div">
-					<ChakraProvider>
-						
-						<Button onClick={() => {saveCanvasToDb(canvas.getSaveData())}}
-							colorScheme='green'>
-							Save
-						</Button>
-						{editButton()}
+					<div className="bottom-middle-div">
+							
+							<Button onClick={() => {saveCanvasToDb(canvas.getSaveData())}}
+								colorScheme='green'
+								size = 'lg'>
+								Save
+							</Button>
+							{editButton()}
 
-					</ChakraProvider>
-				</div>
+					</div>
+
+					<Modal isOpen={isOpen} onClose={onClose}>
+						<ModalOverlay />
+						<ModalContent>
+						<ModalHeader>Welcome to PaintBin</ModalHeader>
+						<ModalCloseButton />
+						<ModalBody>
+							Hey Hey Hey
+						</ModalBody>
+						<ModalFooter>
+							<Button colorScheme='blue' mr={3} onClick={onClose}>
+							Close
+							</Button>
+							<Button variant='ghost'>Contact</Button>
+						</ModalFooter>
+						</ModalContent>
+					</Modal>
+
+
+
+				</ChakraProvider>
+				
 			</div>
 			
     );

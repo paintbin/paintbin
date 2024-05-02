@@ -18,6 +18,23 @@
   width: 100px;
 }
 
+
+.top-right-div {
+  position: fixed;      /* Fixed positioning relative to the viewport */
+  top: 10px;            /* Align to the bottom of the viewport */
+  right: 10px;            /* Center horizontally */
+  /* transform: translateX(-50%); Offset the div by half of its width to truly center it */
+  display: flex;        /* Use flexbox for horizontal layout */
+  align-items: center;  /*Center items vertically within the container */
+  /* background-color: #f0f0f0; Light grey background, change as needed */
+  /* padding: 10px;        Padding around the content */
+  /* box-shadow: 0px -3px 6px rgba(0,0,0,0.1); Optional: adds shadow for better visibility */
+  z-index: 1000;
+  gap: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
 .bottom-middle-div {
   position: fixed;      /* Fixed positioning relative to the viewport */
   bottom: 10px;            /* Align to the bottom of the viewport */
