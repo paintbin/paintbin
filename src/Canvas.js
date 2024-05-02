@@ -31,7 +31,7 @@ function CanvasApp() {
 	const saveCanvasToDb = async (inputCanvas) => {
 		const collectionRef = collection(db, "paints");
 		const payload = {
-			data: inputCanvas,
+			data: JSON.parse(inputCanvas),
 			id: serverTimestamp()
 			
 		};
@@ -52,7 +52,7 @@ function CanvasApp() {
 	//edit functionality
 	const editCanvasToDb = async (inputCanvas) => {
 		const payload = {
-			data: inputCanvas,
+			data: JSON.parse(inputCanvas),
 			id: serverTimestamp()
 			
 		};
@@ -96,7 +96,7 @@ function CanvasApp() {
 			const docSnap = await getDoc(docRef);
 
 			if (docSnap.exists() && canvas != null) {
-				canvas.loadSaveData(docSnap.data()['data'])
+				canvas.loadSaveData(JSON.stringify(docSnap.data()['data']))
 
 			} else {
 				console.log(id + " not found!");
