@@ -1,6 +1,6 @@
 import CanvasDraw from "react-canvas-draw";
-import React, {useState} from "react";
-import db from "./utils/firebase";
+import React, {useState, useRef} from "react";
+import db from "./utils/firebase.tsx";
 import { doc, setDoc, getDoc, addDoc, collection, serverTimestamp } from "firebase/firestore";
 import {useParams} from 'react-router-dom';
 import { useDisclosure } from '@chakra-ui/react'
@@ -27,7 +27,7 @@ function CanvasApp() {
   	const [height, setHeight] = React.useState(window.innerHeight);
 
 	// ref for the current canvas
-    const [canvas, setCanvas] = useState(null);
+    const [canvas, setCanvas] = useState<CanvasDraw | null>(null);
 
 	// toast is a function that handles notifications
 	const toast = useToast();
@@ -36,7 +36,7 @@ function CanvasApp() {
 	const { isOpen, onOpen, onClose } = useDisclosure()
 
 	// stores current canvas data to db and toasts the link
-	const saveCanvasToDb = async (inputCanvas) => {
+	const saveCanvasToDb = async (inputCanvas: string) => {
 		const collectionRef = collection(db, "paints");
 		const payload = {
 			data: JSON.parse(inputCanvas),
@@ -58,15 +58,19 @@ function CanvasApp() {
 	};
 
 	//edit functionality
-	const editCanvasToDb = async (inputCanvas) => {
+	const editCanvasToDb = async (inputCanvas: string) => {
 		const payload = {
 			data: JSON.parse(inputCanvas),
 			id: serverTimestamp()
 			
 		};
-
-		const docRef = doc(db, "paints", id);
-		await setDoc(docRef, payload);
+		if(id != null){
+			const docRef = doc(db, "paints", id);
+			await setDoc(docRef, payload);
+		}
+		else{
+			return;
+		}
 		
 		toast({
 			position: 'top',
@@ -93,8 +97,18 @@ function CanvasApp() {
 	// function to run once on init.
 	// sets canvas hook to input ref
 	// if we have a valid id url, then we load that info into canvas
-	const initCanvas = (canvasReff) => {
+	const initCanvas = (canvasReff: CanvasDraw | null) => {
+		if(canvasReff == null){
+			return;
+		}
+
 		setCanvas(canvasReff);
+
+		if(canvas == null){
+			return;
+		}
+
+
 		const userData = async () => {
 			if(id == null){
 				return;
@@ -120,7 +134,9 @@ function CanvasApp() {
 			return
 		}
 		return (
-			<Button onClick={() => {editCanvasToDb(canvas.getSaveData())}}
+			<Button onClick={() => {
+				if(canvas != null)
+				editCanvasToDb(canvas.getSaveData())}}
 				size = 'lg'>
 				Edit
 			</Button>
@@ -145,7 +161,9 @@ function CanvasApp() {
 
 					<div className="bottom-middle-div">
 							
-							<Button onClick={() => {saveCanvasToDb(canvas.getSaveData())}}
+							<Button onClick={() => {
+								if(canvas != null)
+								saveCanvasToDb(canvas.getSaveData())}}
 								colorScheme='green'
 								size = 'lg'>
 								Save

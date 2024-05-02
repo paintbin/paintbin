@@ -1,5 +1,5 @@
 import './App.css';
-import CanvasApp from './Canvas';
+import CanvasApp from './Canvas.tsx';
 import {Routes, Route, HashRouter } from 'react-router-dom';
 
 function App() {

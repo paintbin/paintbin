@@ -26,23 +26,30 @@ const app = initializeApp(firebaseConfig);
 export default getFirestore(app);
 const auth = getAuth();
 
-export function signUp(email, password) {
-    return createUserWithEmailAndPassword(auth, email, password);
-}
-export function logIn(email, password) {
-    return signInWithEmailAndPassword(auth, email, password);
-}
+// export function signUp(email, password) {
+//     return createUserWithEmailAndPassword(auth, email, password);
+// }
+// export function logIn(email, password) {
+//     return signInWithEmailAndPassword(auth, email, password);
+// }
 export function Logout() {
     return signOut(auth);
 }
 //custom hook for signUp
-export function UseAuth() {
-    const [currentUser, setCurrentUser] = useState();
-    useEffect(() => {
-        const account = onAuthStateChanged(auth, (user) => {
-            setCurrentUser(user);
-        });
-        return account;
-    }, []);
-    return currentUser;
-}
+// export function UseAuth() {
+//     const [currentUser, setCurrentUser] = useState();
+//     useEffect(() => {
+//         const account = onAuthStateChanged(auth, (user) => {
+
+//             if(user == null){
+//                 return;
+//             }
+//             else{
+//                 setCurrentUser(user);
+//             }
+            
+//         });
+//         return account;
+//     }, []);
+//     return currentUser;
+// }
