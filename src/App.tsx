@@ -1,6 +1,6 @@
 import './App.css';
 import CanvasApp from './Canvas.tsx';
-import {Routes, Route, HashRouter } from 'react-router-dom';
+import {Routes, Route, HashRouter, BrowserRouter} from 'react-router-dom';
 
 function App() {
   return (
@@ -10,12 +10,12 @@ function App() {
     <div className="App">
       <header className="App-header">
         
-        <HashRouter>
+        <BrowserRouter>
           <Routes>
             <Route path = "/:id" element = {<CanvasApp />}/>
             <Route path = "/" element = {<CanvasApp />}/>
           </Routes>
-        </HashRouter>
+        </BrowserRouter>
 
         
         
