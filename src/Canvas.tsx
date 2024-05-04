@@ -6,7 +6,7 @@ import {useParams} from 'react-router-dom';
 import { useDisclosure } from '@chakra-ui/react'
 import {InfoOutlineIcon} from '@chakra-ui/icons'
 import ShortUniqueId from 'short-unique-id';
-
+import InfoModal from "./InfoModal.tsx";
 
 import {
     ChakraProvider,
@@ -14,15 +14,7 @@ import {
 	useToast,
 	IconButton 
 } from "@chakra-ui/react";
-import {
-	Modal,
-	ModalOverlay,
-	ModalContent,
-	ModalHeader,
-	ModalFooter,
-	ModalBody,
-	ModalCloseButton,
-  } from '@chakra-ui/react'
+import SavedModal from "./SavedModal.tsx";
 
 const uidLen = 8;
 
@@ -55,7 +47,7 @@ function CanvasApp() {
 			id: serverTimestamp()
 			
 		};
-		const prom = await setDoc(docRef, payload);
+		await setDoc(docRef, payload);
 		
 		toast({
 			position: 'top',
@@ -122,6 +114,7 @@ function CanvasApp() {
 
 		const userData = async () => {
 			if(id == null){
+				console.log("id is null")
 				return;
 			}
 
@@ -147,7 +140,9 @@ function CanvasApp() {
 		return (
 			<Button onClick={() => {
 				if(canvas != null)
-				editCanvasToDb(canvas.getSaveData())}}
+				editCanvasToDb(canvas.getSaveData())
+				
+			}}
 				size = 'lg'>
 				Edit
 			</Button>
@@ -183,22 +178,9 @@ function CanvasApp() {
 
 					</div>
 
-					<Modal isOpen={isOpen} onClose={onClose}>
-						<ModalOverlay />
-						<ModalContent>
-						<ModalHeader>Welcome to PaintBin</ModalHeader>
-						<ModalCloseButton />
-						<ModalBody>
-							Hey Hey Hey
-						</ModalBody>
-						<ModalFooter>
-							<Button colorScheme='blue' mr={3} onClick={onClose}>
-							Close
-							</Button>
-							<Button variant='ghost'>Contact</Button>
-						</ModalFooter>
-						</ModalContent>
-					</Modal>
+					<InfoModal isOpen={isOpen} onClose={onClose}/>
+					{/* <SavedModal isOpen={isOpen} onClose={onClose}/> */}
+
 
 
 
