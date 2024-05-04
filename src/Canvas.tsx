@@ -22,7 +22,7 @@ function CanvasApp() {
 	const [width, setWidth] = React.useState(window.innerWidth);
   	const [height, setHeight] = React.useState(window.innerHeight);
 	
-	  const rootURL = "https://paintbin.github.io/paintbin";
+	  const rootURL = "https://paintbin.vercel.app/";
 
 	// ref for the current canvas
     const [canvas, setCanvas] = useState<CanvasDraw | null>(null);
