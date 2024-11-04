@@ -22,10 +22,12 @@ function CanvasApp() {
 	const [width, setWidth] = React.useState(window.innerWidth);
   	const [height, setHeight] = React.useState(window.innerHeight);
 	
-	  const rootURL = "https://paintbin.vercel.app/";
+	const rootURL = "https://paintbin.vercel.app/";
 
 	// ref for the current canvas
     const [canvas, setCanvas] = useState<CanvasDraw | null>(null);
+
+	// const canvasSaveRef = useRef<CanvasDraw | null>(null);
 
 	// toast is a function that handles notifications
 	const toast = useToast();
@@ -54,11 +56,35 @@ function CanvasApp() {
 			title: 'Paint created at:',
 			description: rootURL + idInput, //prom.id,
 			status: 'success',
-			duration: 10000,
+			duration: 100000,
 			isClosable: true,
 		})
 		
 	};
+
+	// export funcationality
+	const exportAsImage = () => {
+		// Get the canvas element from react-canvas-draw
+		if (canvas == null){
+			return;
+		}
+		// if (canvasSaveRef == null){
+		// 	return
+		// }
+		// if (canvasSaveRef.current == null){
+		// 	return
+		// }
+		
+		const image = "image/png"
+
+
+
+		// Create a download link
+		const link = document.createElement("a");
+		link.href = image;
+		link.download = "canvas-drawing.png";
+		link.click();
+	  };
 
 	//edit functionality
 	const editCanvasToDb = async (inputCanvas: string) => {
@@ -111,6 +137,7 @@ function CanvasApp() {
 			return;
 		}
 
+		
 
 		const userData = async () => {
 			if(id == null){
@@ -149,6 +176,26 @@ function CanvasApp() {
 		)
 
 	}
+
+
+	const saveButton = () => {
+		if(id == null){
+			return
+		}
+		return (
+			<Button onClick={() => {
+				if(canvas != null)
+				exportAsImage()
+				
+			}}
+				size = 'lg'>
+				Save
+			</Button>
+		)
+	
+	}
+
+
     return (
 			<div className="App">
 				<CanvasDraw
@@ -157,6 +204,7 @@ function CanvasApp() {
 					canvasHeight={height}
 					canvasWidth={width}
 					mouseZoomFactor={-0.01}
+					
 				/>
 				<ChakraProvider>
 					<div className = "top-right-div">
@@ -175,6 +223,7 @@ function CanvasApp() {
 								Save
 							</Button>
 							{editButton()}
+							{saveButton()}
 
 					</div>
 
